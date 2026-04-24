@@ -1,1 +1,1 @@
-# MVP: default empty rules.
+# MVP placeholder

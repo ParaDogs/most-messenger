@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "most"
+rootProject.name = "most-messenger"
 include(":app")
