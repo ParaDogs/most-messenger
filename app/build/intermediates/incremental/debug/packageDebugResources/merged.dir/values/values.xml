@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">most</string>
+    <string name="gcm_defaultSenderId" translatable="false">748959097985</string>
+    <string name="google_api_key" translatable="false">AIzaSyBTcw8My2yz7nWiHyXtOongGLfx4n83Vms</string>
+    <string name="google_app_id" translatable="false">1:748959097985:android:a590c9e9439db9f0f79980</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBTcw8My2yz7nWiHyXtOongGLfx4n83Vms</string>
+    <string name="google_storage_bucket" translatable="false">most-18209.firebasestorage.app</string>
+    <string name="project_id" translatable="false">most-18209</string>
+    <style name="Theme.MostMessenger" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+</resources>

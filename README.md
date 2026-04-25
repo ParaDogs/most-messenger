@@ -47,17 +47,7 @@ check these first:
 5. Rebuild/reinstall the app (clear app data first).
 6. If using API key restrictions in Google Cloud, temporarily remove restrictions for testing auth.
 
-## Security note about Google API key
-
-- `google-services.json` must never be committed (already ignored via `.gitignore`).
-- If your hosting/scanner reported a key leak, rotate the key in Google Cloud Console and apply Android app restrictions (package name + SHA-1/SHA-256).
-- For Firebase Auth, also verify allowed APIs and key restrictions are compatible with Firebase services.
-
-## Why user may not appear in Firebase immediately
-
-- In this app, **Sign In** logs into an existing account only.
-- **Create Account** creates a Firebase Auth user.
-- Firestore profile in `users/{userId}` is created after profile setup is saved.
+The app now logs Firebase runtime identity on startup (`projectId`, `appId`) so it is easier to spot project/config mismatches.
 
 ## Next steps TODO map
 

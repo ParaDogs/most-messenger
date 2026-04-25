@@ -40,7 +40,7 @@ fun AuthScreen(
     ) {
         Text("Welcome to most", style = MaterialTheme.typography.headlineMedium)
         Text(
-            "Use Sign In for existing accounts or Create Account for new users.",
+            "Для первого входа можно нажать Continue — если аккаунта нет, он будет создан.",
             style = MaterialTheme.typography.bodySmall
         )
 
@@ -66,11 +66,14 @@ fun AuthScreen(
         if (state.isLoading) {
             CircularProgressIndicator()
         } else {
+            Button(onClick = viewModel::continueWithEmailPassword, modifier = Modifier.fillMaxWidth()) {
+                Text("Continue")
+            }
             Button(onClick = viewModel::signIn, modifier = Modifier.fillMaxWidth()) {
-                Text("Sign In")
+                Text("Sign In only")
             }
             Button(onClick = viewModel::signUp, modifier = Modifier.fillMaxWidth()) {
-                Text("Create Account")
+                Text("Create Account only")
             }
         }
     }
