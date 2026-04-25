@@ -49,14 +49,6 @@ check these first:
 
 The app now logs Firebase runtime identity on startup (`projectId`, `appId`) so it is easier to spot project/config mismatches.
 
-
-## Why user may not appear in Firebase immediately
-
-- In this app, **Sign In** logs into an existing account only.
-- **Create Account** creates a Firebase Auth user.
-- **Continue** tries sign-in first and auto-creates account if user does not exist yet.
-- Firestore profile in `users/{userId}` is created after profile setup is saved.
-
 ## Next steps TODO map
 
 - **Step 3**: chat list data, chat messages, direct/group chat creation.

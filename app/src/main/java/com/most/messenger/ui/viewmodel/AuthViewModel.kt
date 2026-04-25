@@ -2,7 +2,6 @@ package com.most.messenger.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuthException
 import com.most.messenger.data.repository.AuthRepository
 import com.most.messenger.data.repository.firebase.mapFirebaseAuthError
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,38 +31,14 @@ class AuthViewModel(
     )
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
+    fun currentUserId(): String? = authRepository.currentUserId
+
     fun updateEmail(value: String) {
         _uiState.update { it.copy(email = value) }
     }
 
     fun updatePassword(value: String) {
         _uiState.update { it.copy(password = value) }
-    }
-
-    fun continueWithEmailPassword() {
-        val state = _uiState.value
-        if (state.email.isBlank() || state.password.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Email and password are required") }
-            return
-        }
-
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-
-            val signInResult = authRepository.signIn(state.email.trim(), state.password)
-            val finalResult = if (signInResult.isSuccess) {
-                signInResult
-            } else {
-                val errorCode = (signInResult.exceptionOrNull() as? FirebaseAuthException)?.errorCode
-                if (errorCode == "ERROR_USER_NOT_FOUND" || errorCode == "ERROR_INVALID_CREDENTIAL") {
-                    authRepository.signUp(state.email.trim(), state.password)
-                } else {
-                    signInResult
-                }
-            }
-
-            applyAuthResult(finalResult)
-        }
     }
 
     fun signIn() {
@@ -84,31 +59,27 @@ class AuthViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             val result = action(state.email.trim(), state.password)
-            applyAuthResult(result)
+            result
+                .onSuccess { uid ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isAuthenticated = true,
+                            userId = uid,
+                            errorMessage = null
+                        )
+                    }
+                }
+                .onFailure { err ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isAuthenticated = false,
+                            errorMessage = mapFirebaseAuthError(err)
+                        )
+                    }
+                }
         }
-    }
-
-    private fun applyAuthResult(result: Result<String>) {
-        result
-            .onSuccess { uid ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isAuthenticated = true,
-                        userId = uid,
-                        errorMessage = null
-                    )
-                }
-            }
-            .onFailure { err ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isAuthenticated = false,
-                        errorMessage = mapFirebaseAuthError(err)
-                    )
-                }
-            }
     }
 
     fun signOut() {
