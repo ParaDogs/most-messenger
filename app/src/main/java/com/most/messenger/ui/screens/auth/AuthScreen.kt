@@ -13,49 +13,61 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.most.messenger.ui.viewmodel.AuthUiState
 import com.most.messenger.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel,
-    onAuthSuccess: () -> Unit
+    onAuthenticated: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState) {
-        if (uiState is AuthUiState.Success) onAuthSuccess()
+    LaunchedEffect(state.isAuthenticated) {
+        if (state.isAuthenticated) onAuthenticated()
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome to most", style = MaterialTheme.typography.headlineSmall)
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Password") }, modifier = Modifier.fillMaxWidth())
+        Text("Welcome to most", style = MaterialTheme.typography.headlineMedium)
 
-        Button(onClick = { viewModel.signIn(email, password) }, modifier = Modifier.fillMaxWidth()) {
-            Text("Sign In")
-        }
-        Button(onClick = { viewModel.signUp(email, password) }, modifier = Modifier.fillMaxWidth()) {
-            Text("Sign Up")
-        }
+        OutlinedTextField(
+            value = state.email,
+            onValueChange = viewModel::updateEmail,
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
 
-        when (val state = uiState) {
-            is AuthUiState.Error -> Text(state.message, color = MaterialTheme.colorScheme.error)
-            AuthUiState.Loading -> CircularProgressIndicator()
-            else -> Unit
+        OutlinedTextField(
+            value = state.password,
+            onValueChange = viewModel::updatePassword,
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+
+        if (state.isLoading) {
+            CircularProgressIndicator()
+        } else {
+            Button(onClick = viewModel::signIn, modifier = Modifier.fillMaxWidth()) {
+                Text("Sign In")
+            }
+            Button(onClick = viewModel::signUp, modifier = Modifier.fillMaxWidth()) {
+                Text("Create Account")
+            }
         }
     }
 }

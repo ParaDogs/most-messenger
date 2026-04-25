@@ -9,13 +9,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.most.messenger.app.AppContainer
-import com.most.messenger.ui.screens.AuthScreen
+import com.most.messenger.ui.screens.auth.AuthScreen
 import com.most.messenger.ui.screens.ChatListScreen
 import com.most.messenger.ui.screens.DirectChatScreen
 import com.most.messenger.ui.screens.GroupChatScreen
 import com.most.messenger.ui.screens.GroupQuestBoardScreen
 import com.most.messenger.ui.screens.ProfileScreen
-import com.most.messenger.ui.screens.ProfileSetupScreen
+import com.most.messenger.ui.screens.profile.ProfileSetupScreen
 import com.most.messenger.ui.screens.QuestDashboardScreen
 import com.most.messenger.ui.viewmodel.AppViewModelFactory
 import com.most.messenger.ui.viewmodel.AuthViewModel

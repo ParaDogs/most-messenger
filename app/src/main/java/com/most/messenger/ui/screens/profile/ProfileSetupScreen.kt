@@ -13,51 +13,64 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.most.messenger.ui.viewmodel.ProfileSetupUiState
 import com.most.messenger.ui.viewmodel.ProfileSetupViewModel
 
 @Composable
 fun ProfileSetupScreen(
-    onDone: () -> Unit,
-    viewModel: ProfileSetupViewModel = viewModel()
+    viewModel: ProfileSetupViewModel,
+    onProfileSaved: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var displayName by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var avatarUrl by remember { mutableStateOf("") }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState) {
-        if (uiState is ProfileSetupUiState.Saved) onDone()
+    LaunchedEffect(state.saveSuccess) {
+        if (state.saveSuccess) onProfileSaved()
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Setup profile", style = MaterialTheme.typography.headlineSmall)
-        OutlinedTextField(value = displayName, onValueChange = { displayName = it }, label = { Text("Display name") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = username, onValueChange = { username = it }, label = { Text("Username") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = avatarUrl, onValueChange = { avatarUrl = it }, label = { Text("Avatar URL (optional)") }, modifier = Modifier.fillMaxWidth())
+        Text("Set up your profile", style = MaterialTheme.typography.headlineSmall)
 
-        Button(onClick = {
-            viewModel.saveProfile(displayName, username, avatarUrl.ifBlank { null })
-        }, modifier = Modifier.fillMaxWidth()) {
-            Text("Continue")
-        }
+        OutlinedTextField(
+            value = state.displayName,
+            onValueChange = viewModel::updateDisplayName,
+            label = { Text("Display name") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
 
-        when (val state = uiState) {
-            is ProfileSetupUiState.Error -> Text(state.message, color = MaterialTheme.colorScheme.error)
-            ProfileSetupUiState.Loading -> CircularProgressIndicator()
-            else -> Unit
+        OutlinedTextField(
+            value = state.username,
+            onValueChange = viewModel::updateUsername,
+            label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = state.avatarUrl,
+            onValueChange = viewModel::updateAvatarUrl,
+            label = { Text("Avatar URL (optional)") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        state.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+
+        if (state.isSaving) {
+            CircularProgressIndicator()
+        } else {
+            Button(onClick = viewModel::saveProfile, modifier = Modifier.fillMaxWidth()) {
+                Text("Save Profile")
+            }
         }
     }
 }

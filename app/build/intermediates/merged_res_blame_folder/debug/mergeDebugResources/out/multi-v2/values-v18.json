@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.most.messenger.app-mergeDebugResources-80:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\nervo\\.gradle\\caches\\9.4.1\\transforms\\9da6ca242a17dfbed856773f4d99686d\\transformed\\appcompat-1.7.0\\res\\values-v18\\values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

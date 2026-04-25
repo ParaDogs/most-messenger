@@ -31,6 +31,8 @@ class AuthViewModel(
     )
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
+    fun currentUserId(): String? = authRepository.currentUserId
+
     fun updateEmail(value: String) {
         _uiState.update { it.copy(email = value) }
     }

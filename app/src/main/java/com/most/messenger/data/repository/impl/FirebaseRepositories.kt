@@ -19,21 +19,22 @@ import kotlinx.coroutines.tasks.await
 class FirebaseAuthRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) : AuthRepository {
-    override suspend fun signIn(email: String, password: String): Result<Unit> = runCatching {
-        auth.signInWithEmailAndPassword(email, password).await()
-        Unit
+    override val currentUserId: String?
+        get() = auth.currentUser?.uid
+
+    override suspend fun signIn(email: String, password: String): Result<String> = runCatching {
+        val result = auth.signInWithEmailAndPassword(email, password).await()
+        result.user?.uid ?: error("User is null after sign in")
     }
 
-    override suspend fun signUp(email: String, password: String): Result<Unit> = runCatching {
-        auth.createUserWithEmailAndPassword(email, password).await()
-        Unit
+    override suspend fun signUp(email: String, password: String): Result<String> = runCatching {
+        val result = auth.createUserWithEmailAndPassword(email, password).await()
+        result.user?.uid ?: error("User is null after sign up")
     }
 
-    override suspend fun signOut() {
+    override fun signOut() {
         auth.signOut()
     }
-
-    override fun currentUserId(): String? = auth.currentUser?.uid
 }
 
 class FirebaseUserRepository(
@@ -68,7 +69,8 @@ class FirebaseChatRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : ChatRepository {
-    override fun observeChatsForCurrentUser(userId: String): Flow<List<Chat>> = callbackFlow {
+    override fun observeChatsForCurrentUser(): Flow<List<Chat>> = callbackFlow {
+        val userId = auth.currentUser?.uid ?: return@callbackFlow
         val listener = firestore.collection("chats")
             .whereArrayContains("memberIds", userId)
             .addSnapshotListener { value, error ->
