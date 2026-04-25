@@ -2,6 +2,7 @@ package com.most.messenger.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuthException
 import com.most.messenger.data.repository.AuthRepository
 import com.most.messenger.data.repository.firebase.mapFirebaseAuthError
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +48,22 @@ class AuthViewModel(
 
     fun signUp() {
         submitAuth { email, password -> authRepository.signUp(email, password) }
+    }
+
+    fun continueWithEmailPassword() {
+        submitAuth { email, password ->
+            authRepository.signIn(email, password).fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { throwable ->
+                    val authCode = (throwable as? FirebaseAuthException)?.errorCode
+                    if (authCode == "ERROR_USER_NOT_FOUND" || authCode == "ERROR_INVALID_CREDENTIAL") {
+                        authRepository.signUp(email, password)
+                    } else {
+                        Result.failure(throwable)
+                    }
+                }
+            )
+        }
     }
 
     private fun submitAuth(action: suspend (String, String) -> Result<String>) {

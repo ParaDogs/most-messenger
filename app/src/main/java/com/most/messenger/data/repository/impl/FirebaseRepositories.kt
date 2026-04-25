@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.most.messenger.data.model.Chat
 import com.most.messenger.data.model.Message
 import com.most.messenger.data.model.Quest
-import com.most.messenger.data.model.QuestInput
+import com.most.messenger.data.model.CreateQuestInput
 import com.most.messenger.data.model.UserProfile
 import com.most.messenger.data.repository.AuthRepository
 import com.most.messenger.data.repository.ChatRepository
@@ -138,19 +138,19 @@ class FirebaseQuestRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : QuestRepository {
-    override suspend fun createDirectQuest(chatId: String, recipientId: String, input: QuestInput): Result<String> =
+    override suspend fun createDirectQuest(chatId: String, recipientId: String, input: CreateQuestInput): Result<String> =
         runCatching {
             // TODO Step 4: create quest + quest message atomically in a batch write.
             val quest = Quest(title = input.title)
             firestore.collection("quests").add(quest).await().id
         }
 
-    override suspend fun createOpenGroupQuest(chatId: String, input: QuestInput): Result<String> = runCatching {
+    override suspend fun createOpenGroupQuest(chatId: String, input: CreateQuestInput): Result<String> = runCatching {
         // TODO Step 4: add source and assignment metadata when quest creation flow is implemented.
         firestore.collection("quests").add(Quest(title = input.title)).await().id
     }
 
-    override suspend fun createPersonalQuest(input: QuestInput): Result<String> = runCatching {
+    override suspend fun createPersonalQuest(input: CreateQuestInput): Result<String> = runCatching {
         val userId = auth.currentUser?.uid ?: error("No authenticated user")
         val quest = Quest(title = input.title, createdBy = userId)
         firestore.collection("quests").add(quest).await().id

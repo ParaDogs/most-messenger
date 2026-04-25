@@ -1,23 +1,23 @@
 package com.most.messenger.data.repository.firebase
 
-import com.most.messenger.data.model.QuestInput
+import com.most.messenger.data.model.CreateQuestInput
 import com.most.messenger.data.model.Quest
 import com.most.messenger.data.repository.QuestRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FirebaseQuestRepository : QuestRepository {
-    override suspend fun createDirectQuest(chatId: String, recipientId: String, input: QuestInput): Result<String> {
+    override suspend fun createDirectQuest(chatId: String, recipientId: String, input: CreateQuestInput): Result<String> {
         // TODO(step-4): Create quest doc and linked QUEST message in direct chat.
         return Result.success("")
     }
 
-    override suspend fun createOpenGroupQuest(chatId: String, input: QuestInput): Result<String> {
+    override suspend fun createOpenGroupQuest(chatId: String, input: CreateQuestInput): Result<String> {
         // TODO(step-4): Create OPEN group quest and linked QUEST message.
         return Result.success("")
     }
 
-    override suspend fun createPersonalQuest(input: QuestInput): Result<String> {
+    override suspend fun createPersonalQuest(input: CreateQuestInput): Result<String> {
         // TODO(step-4): Create private self quest.
         return Result.success("")
     }
