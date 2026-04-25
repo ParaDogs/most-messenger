@@ -54,7 +54,7 @@ data class Quest(
     val completedAt: Long? = null
 )
 
-data class CreateQuestInput(
+data class QuestInput(
     val title: String,
     val description: String? = null,
     val deadlineAt: Long? = null,

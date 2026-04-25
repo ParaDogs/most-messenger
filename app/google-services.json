@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "748959097985",
+    "project_id": "most-18209",
+    "storage_bucket": "most-18209.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748959097985:android:a590c9e9439db9f0f79980",
+        "android_client_info": {
+          "package_name": "com.most.messenger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTcw8My2yz7nWiHyXtOongGLfx4n83Vms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

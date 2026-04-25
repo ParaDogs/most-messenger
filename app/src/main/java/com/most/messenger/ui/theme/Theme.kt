@@ -1,6 +1,5 @@
 package com.most.messenger.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -12,7 +11,7 @@ private val DarkColors = darkColorScheme()
 @Composable
 fun MostTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) DarkColors else LightColors,
+        colorScheme = if (true) LightColors else DarkColors,
         content = content
     )
 }

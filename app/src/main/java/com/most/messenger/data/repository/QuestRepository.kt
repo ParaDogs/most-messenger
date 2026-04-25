@@ -1,13 +1,13 @@
 package com.most.messenger.data.repository
 
-import com.most.messenger.data.model.CreateQuestInput
 import com.most.messenger.data.model.Quest
+import com.most.messenger.data.model.QuestInput
 import kotlinx.coroutines.flow.Flow
 
 interface QuestRepository {
-    suspend fun createDirectQuest(chatId: String, recipientId: String, input: CreateQuestInput): Result<String>
-    suspend fun createOpenGroupQuest(chatId: String, input: CreateQuestInput): Result<String>
-    suspend fun createPersonalQuest(input: CreateQuestInput): Result<String>
+    suspend fun createDirectQuest(chatId: String, recipientId: String, input: QuestInput): Result<String>
+    suspend fun createOpenGroupQuest(chatId: String, input: QuestInput): Result<String>
+    suspend fun createPersonalQuest(input: QuestInput): Result<String>
 
     fun observeDashboardQuests(userId: String): Flow<List<Quest>>
     fun observeGroupQuests(chatId: String): Flow<List<Quest>>
